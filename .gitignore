@@ -21,3 +21,7 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/first_project/101 Big Data.iml
+/first_project/101_Big_Data.iml
+/first_project/.idea/
+/.idea/
