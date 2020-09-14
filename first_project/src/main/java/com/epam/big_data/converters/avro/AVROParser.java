@@ -15,6 +15,12 @@ import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Class for parsing text data to AVRO format
+ *
+ * @author Arthur_Dorozhkin
+ * @version 1.0
+ */
 public class AVROParser {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -42,6 +48,11 @@ public class AVROParser {
         return datums;
     }
 
+    /**
+     * Method that gets list of strings arrays with data and output stream where data will be writing
+     * @param strings List of strings arrays with data
+     * @param output Output stream for writing the data
+     */
     public static void writeAll(List<String[]> strings, OutputStream output) {
         LOGGER.debug("Starts creating the schema");
         Schema schema = generateSchema(strings);
