@@ -11,6 +11,12 @@ import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * App for parsing data from CSV to AVRO
+ *
+ * @author Arthur_Dorozhkin
+ * @version 1.0
+ */
 public class App {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -19,7 +25,7 @@ public class App {
         List<String[]> strings = readAllFromCSV();
         writeAllToAVRO(strings);
     }
-
+    
     private static List<String[]> readAllFromCSV() {
         try (Reader reader = Files.newBufferedReader(Paths.get(
                 "first_project/files/csv/sample_submission.csv"
