@@ -16,7 +16,7 @@ public class Config {
     static {
         Configurations configs = new Configurations();
         try {
-            config = configs.properties(new File("first_project/avro_parser.properties"));
+            config = configs.properties(new File("avro_parser.properties"));
         } catch (ConfigurationException cex) {
             LOGGER.error("Can't load the properties", cex);
         }
