@@ -28,3 +28,4 @@ hs_err_pid*
 /first_project/files/avro/*
 !*.gitkeep
 /first_project/avro_parser.iml
+/first_project/target/
