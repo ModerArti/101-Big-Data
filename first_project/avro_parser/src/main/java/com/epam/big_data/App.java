@@ -1,5 +1,6 @@
 package com.epam.big_data;
 
+import com.epam.big_data.config.Config;
 import com.epam.big_data.converters.avro.AVROParser;
 import com.epam.big_data.converters.csv.CSVParser;
 import org.apache.logging.log4j.LogManager;
@@ -25,10 +26,10 @@ public class App {
         List<String[]> strings = readAllFromCSV();
         writeAllToAVRO(strings);
     }
-    
+
     private static List<String[]> readAllFromCSV() {
         try (Reader reader = Files.newBufferedReader(Paths.get(
-                "first_project/files/csv/sample_submission.csv"
+                Config.loadProperty("file.csv")
         ))) {
             return CSVParser.readAll(reader);
         } catch (IOException e) {
@@ -38,7 +39,9 @@ public class App {
     }
 
     private static void writeAllToAVRO(List<String[]> strings) {
-        try (OutputStream output = new FileOutputStream(new File("first_project/files/avro/data.avro"))) {
+        try (OutputStream output = new FileOutputStream(new File(
+                Config.loadProperty("file.avro")
+        ))) {
             AVROParser.writeAll(strings, output);
         } catch (FileNotFoundException e) {
             LOGGER.error("File not found", e);
