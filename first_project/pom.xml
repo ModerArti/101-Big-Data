@@ -19,6 +19,20 @@
 
     <dependencies>
 
+        <!-- AVRO -->
+        <!-- https://mvnrepository.com/artifact/org.apache.avro/avro -->
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.10.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.avro/avro-compiler -->
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro-compiler</artifactId>
+            <version>1.10.0</version>
+        </dependency>
+
         <!-- CSV READER -->
         <!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
         <dependency>
