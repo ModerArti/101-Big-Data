@@ -2,9 +2,7 @@ package com.epam.big_data.converters.csv;
 
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,11 +14,11 @@ public class CSVParserTest {
     @Test
     public void readAllOnEmptyString() throws IOException {
         String csvString = "";
-        Reader reader = new StringReader(csvString);
-        List<String[]> result = CSVParser.readAll(reader);
+        InputStream in = new BufferedInputStream(new ByteArrayInputStream(csvString.getBytes()));
+        List<String[]> result = CSVParser.readAll(in);
         List<String[]> expected = new LinkedList<>();
         assertArrayEquals(expected.toArray(), result.toArray());
-        reader.close();
+        in.close();
     }
 
     @Test
@@ -30,9 +28,9 @@ public class CSVParserTest {
                 "C, D\n" +
                 "G, G\n" +
                 "G, F";
-        Reader reader = new StringReader(csvString);
-        List<String[]> result = CSVParser.readAll(reader);
-        List<String[]> expected = Arrays.asList(new String[][] {
+        InputStream in = new BufferedInputStream(new ByteArrayInputStream(csvString.getBytes()));
+        List<String[]> result = CSVParser.readAll(in);
+        List<String[]> expected = Arrays.asList(new String[][]{
                 {"colA", " ColB"},
                 {"A", " B"},
                 {"C", " D"},
@@ -40,7 +38,7 @@ public class CSVParserTest {
                 {"G", " F"},
         });
         assertArrayEquals(expected.toArray(), result.toArray());
-        reader.close();
+        in.close();
     }
 
 }
