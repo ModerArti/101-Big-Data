@@ -6,7 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,9 +26,9 @@ public class CSVParser {
       * @param reader Source of CSV data
       * @return List of strings arrays with parsed data
       */
-     public static List<String[]> readAll(Reader reader) {
+     public static List<String[]> readAll(InputStream reader) {
           LOGGER.info("Starts reading the CSV file");
-          try (CSVReader csvReader = new CSVReader(reader)) {
+          try (CSVReader csvReader = new CSVReader(new InputStreamReader(reader))) {
                List<String[]> strings =  csvReader.readAll();
                LOGGER.info("Gets the end of the file");
                return strings;
