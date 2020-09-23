@@ -1,4 +1,4 @@
-package com.epam.big_data.converters.csv;
+package com.epam.bigdata.converters.csv;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;

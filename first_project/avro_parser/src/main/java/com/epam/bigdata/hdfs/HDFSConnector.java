@@ -1,6 +1,6 @@
-package com.epam.big_data.hdfs;
+package com.epam.bigdata.hdfs;
 
-import com.epam.big_data.config.Config;
+import com.epam.bigdata.config.Config;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;

@@ -1,4 +1,4 @@
-package com.epam.big_data.config;
+package com.epam.bigdata.config;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;

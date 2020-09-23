@@ -1,4 +1,4 @@
-package com.epam.big_data;
+package com.epam.bigdata;
 
 import static org.junit.Assert.assertTrue;
 

@@ -1,8 +1,8 @@
-package com.epam.big_data;
+package com.epam.bigdata;
 
-import com.epam.big_data.converters.avro.AVROParser;
-import com.epam.big_data.converters.csv.CSVParser;
-import com.epam.big_data.hdfs.HDFSConnector;
+import com.epam.bigdata.converters.avro.AVROParser;
+import com.epam.bigdata.converters.csv.CSVParser;
+import com.epam.bigdata.hdfs.HDFSConnector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

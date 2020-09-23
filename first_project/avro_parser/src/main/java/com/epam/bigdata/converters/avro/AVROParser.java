@@ -1,4 +1,4 @@
-package com.epam.big_data.converters.avro;
+package com.epam.bigdata.converters.avro;
 
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
