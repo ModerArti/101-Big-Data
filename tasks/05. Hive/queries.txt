@@ -1,0 +1,16 @@
+1) Creating the table and downloading data into it
+
+CREATE TABLE my_test (id INT, date_time TIMESTAMP, site_name INT, posa_continent INT, user_location_country INT, user_location_region INT, user_location_city INT, orig_destination_distance DOUBLE, user_id INT, is_mobile INT, is_package INT, channel INT, srch_ci STRING, srch_co STRING, srch_adults_cnt INT, srch_children_cnt INT, srch_rm_cnt INT, srch_destination_id INT, srch_destination_type_id INT, hotel_continent INT, hotel_country INT, hotel_market INT)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED by ','
+STORED AS TEXTFILE
+TBLPROPERTIES ("skip.header.line.count"="1");
+
+LOAD DATA INPATH '/user/admin/data/test.csv' OVERWRITE INTO TABLE my_test;
+
+2) Calculate 3 Top most popular countries
+SELECT hotel_country FROM my_test
+	WHERE is_mobile = 1
+	GROUP BY hotel_country
+    ORDER BY COUNT(hotel_country)
+LIMIT 3;
