@@ -14,3 +14,10 @@ SELECT hotel_country FROM my_test
 	GROUP BY hotel_country
     ORDER BY COUNT(hotel_country)
 LIMIT 3;
+
+4) Calculate 3 Top most popular hotels (treat hotel as composite key of continent, country and market)
+SELECT hotel_continent, hotel_country, hotel_market FROM my_test
+	WHERE is_mobile = 0
+	GROUP BY hotel_continent, hotel_country, hotel_market
+    ORDER BY COUNT(*)
+LIMIT 3;
