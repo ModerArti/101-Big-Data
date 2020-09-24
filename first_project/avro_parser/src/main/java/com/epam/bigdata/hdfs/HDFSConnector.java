@@ -5,6 +5,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
+import org.apache.kerby.config.Conf;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,8 +23,18 @@ public class HDFSConnector {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static final String HDFS_URL = Config.loadProperty("hdfs.url");
+    private static final String HDFS_URL;
     private static final Configuration config = new Configuration(false);
+
+    static {
+        config.addResource(new Path(
+                Config.loadProperty("hdfs.core-site.file")
+        ));
+        config.addResource(new Path(
+                Config.loadProperty("hdfs.hdfs-site.file")
+        ));
+        HDFS_URL = config.get("fs.defaultFS");
+    }
 
     /**
      * Method for reading files
@@ -34,8 +45,6 @@ public class HDFSConnector {
         InputStream in = null;
         PipedOutputStream out = new PipedOutputStream();
         try {
-            config.set("fs.defaultFS", Config.loadProperty("hdfs.url"));
-            config.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
             final String PATH_TO_FILE = Config.loadProperty("hdfs.file.csv");
             final String uri = HDFS_URL + PATH_TO_FILE;
             FileSystem fs = FileSystem.get(URI.create(uri), config);
@@ -59,8 +68,6 @@ public class HDFSConnector {
      */
     public static void writeFile(InputStream in) {
         try {
-            config.set("fs.defaultFS", Config.loadProperty("hdfs.url"));
-            config.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
             final String PATH_TO_FILE = Config.loadProperty("hdfs.file.avro");
             final String uri = HDFS_URL + PATH_TO_FILE;
             FileSystem fs = FileSystem.get(URI.create(uri), config);
