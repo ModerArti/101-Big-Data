@@ -20,8 +20,6 @@ import java.util.List;
  */
 public class App {
 
-    private static final Logger LOGGER = LogManager.getLogger();
-
     public static void main(String[] args) throws IOException, CsvException {
         PipedOutputStream outFromHDFStoCSV = HDFSConnector.readFile();
         List<String[]> strings = readAllFromCSV(outFromHDFStoCSV);
