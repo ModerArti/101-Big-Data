@@ -19,6 +19,7 @@ public class Config {
             config = configs.properties(new File("avro_parser.properties"));
         } catch (ConfigurationException cex) {
             LOGGER.error("Can't load the properties", cex);
+            throw new RuntimeException(cex);
         }
     }
 

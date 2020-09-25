@@ -5,13 +5,11 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.kerby.config.Conf;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.URI;
-
 
 /**
  * Class for connecting to HDFS for reading and writing files
@@ -41,13 +39,13 @@ public class HDFSConnector {
      *
      * @return <code>PipedOutputStream</code> for further data processing
      */
-    public static PipedOutputStream readFile() {
+    public static PipedOutputStream readFile() throws IOException {
         InputStream in = null;
-        PipedOutputStream out = new PipedOutputStream();
         try {
             final String PATH_TO_FILE = Config.loadProperty("hdfs.file.csv");
             final String uri = HDFS_URL + PATH_TO_FILE;
             FileSystem fs = FileSystem.get(URI.create(uri), config);
+            PipedOutputStream out = new PipedOutputStream();
             in = fs.open(new Path(uri));
             LOGGER.info("Starts reading file from HDFS");
             IOUtils.copyBytes(in, out, config, false);
@@ -55,10 +53,10 @@ public class HDFSConnector {
             return out;
         } catch (IOException e) {
             LOGGER.error("Can't load file for reading", e);
+            throw e;
         } finally {
             IOUtils.closeStream(in);
         }
-        return out;
     }
 
     /**
@@ -66,7 +64,7 @@ public class HDFSConnector {
      *
      * @param in <code>InputStream</code> with data
      */
-    public static void writeFile(InputStream in) {
+    public static void writeFile(InputStream in) throws IOException {
         try {
             final String PATH_TO_FILE = Config.loadProperty("hdfs.file.avro");
             final String uri = HDFS_URL + PATH_TO_FILE;
@@ -77,6 +75,7 @@ public class HDFSConnector {
             LOGGER.info("Ends writing file to HDFS");
         } catch (IOException e) {
             LOGGER.error("Can't load file for writing", e);
+            throw e;
         }
     }
 
