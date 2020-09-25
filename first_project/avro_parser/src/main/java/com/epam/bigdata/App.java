@@ -1,15 +1,15 @@
-package com.epam.big_data;
+package com.epam.bigdata;
 
-import com.epam.big_data.converters.avro.AVROParser;
-import com.epam.big_data.converters.csv.CSVParser;
-import com.epam.big_data.hdfs.HDFSConnector;
+import com.epam.bigdata.converters.avro.AVROParser;
+import com.epam.bigdata.converters.csv.CSVParser;
+import com.epam.bigdata.hdfs.HDFSConnector;
+import com.opencsv.exceptions.CsvException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -20,25 +20,20 @@ import java.util.List;
  */
 public class App {
 
-    private static final Logger LOGGER = LogManager.getLogger();
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, CsvException {
         PipedOutputStream outFromHDFStoCSV = HDFSConnector.readFile();
         List<String[]> strings = readAllFromCSV(outFromHDFStoCSV);
         PipedOutputStream outFromAVROToHDFS = writeAllToAVRO(strings);
         HDFSConnector.writeFile(new PipedInputStream(outFromAVROToHDFS));
     }
 
-    private static List<String[]> readAllFromCSV(PipedOutputStream out) {
+    private static List<String[]> readAllFromCSV(PipedOutputStream out) throws IOException, CsvException {
         try (PipedInputStream in = new PipedInputStream(out)) {
             return CSVParser.readAll(in);
-        } catch (IOException e) {
-            LOGGER.error(e);
         }
-        return new LinkedList<>();
     }
 
-    private static PipedOutputStream writeAllToAVRO(List<String[]> strings) {
+    private static PipedOutputStream writeAllToAVRO(List<String[]> strings) throws IOException {
         PipedOutputStream output = new PipedOutputStream();
         AVROParser.writeAll(strings, output);
         return output;

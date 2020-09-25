@@ -1,4 +1,4 @@
-package com.epam.big_data.config;
+package com.epam.bigdata.config;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
@@ -19,6 +19,7 @@ public class Config {
             config = configs.properties(new File("avro_parser.properties"));
         } catch (ConfigurationException cex) {
             LOGGER.error("Can't load the properties", cex);
+            throw new RuntimeException(cex);
         }
     }
 
