@@ -1,4 +1,4 @@
-package com.epam.big_data.converters.avro;
+package com.epam.bigdata.converters.avro;
 
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
@@ -53,7 +53,7 @@ public class AVROParser {
      * @param strings List of strings arrays with data
      * @param output Output stream for writing the data
      */
-    public static void writeAll(List<String[]> strings, OutputStream output) {
+    public static void writeAll(List<String[]> strings, OutputStream output) throws IOException {
         LOGGER.debug("Starts creating the schema");
         Schema schema = generateSchema(strings);
         LOGGER.debug("Ends creating the schema");
@@ -71,7 +71,8 @@ public class AVROParser {
             }
             LOGGER.info("Ends writing the AVRO file");
         } catch (IOException e) {
-            LOGGER.error("Some problem with writing datums", e);
+            LOGGER.error("Some problem with writing AVRO file", e);
+            throw e;
         }
     }
 }
