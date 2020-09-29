@@ -30,13 +30,12 @@ public class HDFSConnector {
      *
      * @return <code>PipedOutputStream</code> for further data processing
      */
-    public static PipedOutputStream readFile() throws IOException {
+    public static PipedOutputStream readFile(String pathToFile) throws IOException {
         InputStream in = null;
         try {
-            final String PATH_TO_FILE = Config.loadProperty("hdfs.file.csv");
             FileSystem fs = FileSystem.get(config);
             PipedOutputStream out = new PipedOutputStream();
-            in = fs.open(new Path(PATH_TO_FILE));
+            in = fs.open(new Path(pathToFile));
             logger.info("Starts reading file from HDFS");
             IOUtils.copyBytes(in, out, config, false);
             logger.info("Ends reading file from HDFS");
@@ -54,11 +53,10 @@ public class HDFSConnector {
      *
      * @param in <code>InputStream</code> with data
      */
-    public static void writeFile(InputStream in) throws IOException {
+    public static void writeFile(InputStream in, String pathToFile) throws IOException {
         try {
-            final String PATH_TO_FILE = Config.loadProperty("hdfs.file.avro");
             FileSystem fs = FileSystem.get(config);
-            OutputStream out = fs.append(new Path(PATH_TO_FILE));
+            OutputStream out = fs.append(new Path(pathToFile));
             logger.info("Starts writing file to HDFS");
             IOUtils.copyBytes(in, out, config, true);
             logger.info("Ends writing file to HDFS");

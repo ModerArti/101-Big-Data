@@ -1,5 +1,6 @@
 package com.epam.bigdata;
 
+import com.epam.bigdata.config.Config;
 import com.epam.bigdata.converters.avro.AVROParser;
 import com.epam.bigdata.converters.csv.CSVParser;
 import com.epam.bigdata.hdfs.HDFSConnector;
@@ -18,11 +19,16 @@ import java.util.List;
  */
 public class App {
 
+    private static final String PATH_TO_CSV = Config.loadProperty("hdfs.file.csv");
+    private static final String PATH_TO_AVRO = Config.loadProperty("hdfs.file.avro");
+
     public static void main(String[] args) throws IOException, CsvException {
-        PipedOutputStream outFromHDFStoCSV = HDFSConnector.readFile();
+        PipedOutputStream outFromHDFStoCSV = HDFSConnector.readFile(PATH_TO_CSV);
+
         List<String[]> strings = readAllFromCSV(outFromHDFStoCSV);
         PipedOutputStream outFromAVROToHDFS = writeAllToAVRO(strings);
-        HDFSConnector.writeFile(new PipedInputStream(outFromAVROToHDFS));
+
+        HDFSConnector.writeFile(new PipedInputStream(outFromAVROToHDFS), PATH_TO_AVRO);
     }
 
     private static List<String[]> readAllFromCSV(PipedOutputStream out) throws IOException, CsvException {
