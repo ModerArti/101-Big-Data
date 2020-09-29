@@ -4,8 +4,6 @@ import com.epam.bigdata.converters.avro.AVROParser;
 import com.epam.bigdata.converters.csv.CSVParser;
 import com.epam.bigdata.hdfs.HDFSConnector;
 import com.opencsv.exceptions.CsvException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.PipedInputStream;

@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class CSVParser {
 
-     private final static Logger LOGGER = LogManager.getLogger();
+     private final static Logger logger = LogManager.getLogger();
 
      /**
       * Method that gets the <code>reader</code> and read CSV data from it to list of strings arrays
@@ -26,13 +26,13 @@ public class CSVParser {
       * @return List of strings arrays with parsed data
       */
      public static List<String[]> readAll(InputStream reader) throws IOException, CsvException {
-          LOGGER.info("Starts reading the CSV file");
+          logger.info("Starts reading the CSV file");
           try (CSVReader csvReader = new CSVReader(new InputStreamReader(reader))) {
                List<String[]> strings =  csvReader.readAll();
-               LOGGER.info("Gets the end of the file");
+               logger.info("Gets the end of the file");
                return strings;
           } catch (IOException | CsvException e) {
-               LOGGER.error("Can't read the CSV file", e);
+               logger.error("Can't read the CSV file", e);
                throw e;
           }
      }

@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class AVROParser {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     private static Schema generateSchema(List<String[]> strings) {
         String[] headers = strings.remove(0);
@@ -54,24 +54,24 @@ public class AVROParser {
      * @param output Output stream for writing the data
      */
     public static void writeAll(List<String[]> strings, OutputStream output) throws IOException {
-        LOGGER.debug("Starts creating the schema");
+        logger.debug("Starts creating the schema");
         Schema schema = generateSchema(strings);
-        LOGGER.debug("Ends creating the schema");
+        logger.debug("Ends creating the schema");
 
-        LOGGER.debug("Starts getting datums");
+        logger.debug("Starts getting datums");
         List<GenericRecord> datums = getDatums(strings, schema);
-        LOGGER.debug("Ends getting datums");
+        logger.debug("Ends getting datums");
 
-        LOGGER.info("Starts writing the AVRO file");
+        logger.info("Starts writing the AVRO file");
         DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<>(schema);
         try (DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<>(datumWriter)) {
             dataFileWriter.create(schema, output);
             for (GenericRecord datum : datums) {
                 dataFileWriter.append(datum);
             }
-            LOGGER.info("Ends writing the AVRO file");
+            logger.info("Ends writing the AVRO file");
         } catch (IOException e) {
-            LOGGER.error("Some problem with writing AVRO file", e);
+            logger.error("Some problem with writing AVRO file", e);
             throw e;
         }
     }

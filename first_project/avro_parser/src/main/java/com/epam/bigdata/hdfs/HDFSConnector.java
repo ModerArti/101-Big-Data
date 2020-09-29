@@ -19,7 +19,7 @@ import java.net.URI;
  */
 public class HDFSConnector {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     private static final String HDFS_URL;
     private static final Configuration config = new Configuration(false);
@@ -47,12 +47,12 @@ public class HDFSConnector {
             FileSystem fs = FileSystem.get(URI.create(uri), config);
             PipedOutputStream out = new PipedOutputStream();
             in = fs.open(new Path(uri));
-            LOGGER.info("Starts reading file from HDFS");
+            logger.info("Starts reading file from HDFS");
             IOUtils.copyBytes(in, out, config, false);
-            LOGGER.info("Ends reading file from HDFS");
+            logger.info("Ends reading file from HDFS");
             return out;
         } catch (IOException e) {
-            LOGGER.error("Can't load file for reading", e);
+            logger.error("Can't load file for reading", e);
             throw e;
         } finally {
             IOUtils.closeStream(in);
@@ -70,11 +70,11 @@ public class HDFSConnector {
             final String uri = HDFS_URL + PATH_TO_FILE;
             FileSystem fs = FileSystem.get(URI.create(uri), config);
             OutputStream out = fs.append(new Path(uri));
-            LOGGER.info("Starts writing file to HDFS");
+            logger.info("Starts writing file to HDFS");
             IOUtils.copyBytes(in, out, config, true);
-            LOGGER.info("Ends writing file to HDFS");
+            logger.info("Ends writing file to HDFS");
         } catch (IOException e) {
-            LOGGER.error("Can't load file for writing", e);
+            logger.error("Can't load file for writing", e);
             throw e;
         }
     }
