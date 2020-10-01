@@ -4,6 +4,7 @@ import com.opencsv.exceptions.CsvException;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,9 +17,10 @@ public class CSVParserTest {
     public void readAllOnEmptyString() throws IOException, CsvException {
         String csvString = "";
         InputStream in = new BufferedInputStream(new ByteArrayInputStream(csvString.getBytes()));
-        List<String[]> result = CSVParser.readAll(in);
-        List<String[]> expected = new LinkedList<>();
-        assertArrayEquals(expected.toArray(), result.toArray());
+        CSVParser.setInputStream(in);
+        String[] result = CSVParser.readLine();
+        String[] expected = null;
+        assertArrayEquals(expected, result);
         in.close();
     }
 
@@ -30,7 +32,12 @@ public class CSVParserTest {
                 "G, G\n" +
                 "G, F";
         InputStream in = new BufferedInputStream(new ByteArrayInputStream(csvString.getBytes()));
-        List<String[]> result = CSVParser.readAll(in);
+        CSVParser.setInputStream(in);
+        List<String[]> result = new ArrayList<>();
+        String[] strings;
+        while ((strings = CSVParser.readLine()) != null) {
+            result.add(strings);
+        }
         List<String[]> expected = Arrays.asList(new String[][]{
                 {"colA", " ColB"},
                 {"A", " B"},

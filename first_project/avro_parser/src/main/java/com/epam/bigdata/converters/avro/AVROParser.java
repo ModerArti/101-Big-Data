@@ -25,8 +25,10 @@ public class AVROParser {
 
     private static final Logger logger = LogManager.getLogger();
 
-    private static Schema generateSchema(List<String[]> strings) {
-        String[] headers = strings.remove(0);
+    private static Schema schema;
+    private static OutputStream out;
+
+    private static Schema generateSchema(String[] headers) {
         SchemaBuilder.FieldAssembler<Schema> fieldBuilder = SchemaBuilder.record("data")
                 .namespace("com.epam.bigdata")
                 .fields();
@@ -36,45 +38,51 @@ public class AVROParser {
         return fieldBuilder.endRecord();
     }
 
-    private static List<GenericRecord> getDatums(List<String[]> strings, Schema schema) {
+    private static List<GenericRecord> getDatums(String[] values, Schema schema) {
         List<GenericRecord> datums = new LinkedList<>();
-        for (String[] values : strings) {
-            GenericRecord datum = new GenericData.Record(schema);
-            for (int i = 0; i < values.length; ++i) {
-                datum.put(schema.getFields().get(i).name(), values[i]);
-            }
-            datums.add(datum);
+        GenericRecord datum = new GenericData.Record(schema);
+        for (int i = 0; i < values.length; ++i) {
+            datum.put(schema.getFields().get(i).name(), values[i]);
         }
+        datums.add(datum);
         return datums;
     }
 
     /**
-     * Method that gets list of strings arrays with data and output stream where data will be writing
-     * @param output Output stream for writing the data
+     * Method for init OutputStream in AVROParser
+     * @param outputStream output stream for writing the data
+     */
+    public static void setOutputStream(OutputStream outputStream) {
+        out = outputStream;
+    }
+
+    /**
+     * Method that gets list of strings arrays with data and writing it
+     *
      * @param strings List of strings arrays with data
      */
-    public static void writeAll(OutputStream output, List<String[]> strings) throws IOException {
-        logger.debug("Starts creating the schema");
-        Schema schema = generateSchema(strings);
-        logger.debug("Ends creating the schema");
+    public static void writeLine(String[] strings) throws IOException {
+        if (schema == null) {
+            logger.debug("Start creating the schema");
+            schema = generateSchema(strings);
+            logger.debug("End creating the schema");
+        } else {
+            logger.debug("Start getting datums");
+            List<GenericRecord> datums = getDatums(strings, schema);
+            logger.debug("End getting datums");
 
-        logger.debug("Starts getting datums");
-        List<GenericRecord> datums = getDatums(strings, schema);
-        logger.debug("Ends getting datums");
-
-        logger.info("Starts writing the AVRO file");
-        DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<>(schema);
-        try (DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<>(datumWriter)) {
-            dataFileWriter.create(schema, output);
-            for (GenericRecord datum : datums) {
-                dataFileWriter.append(datum);
+            logger.debug("Writing line to AVRO file");
+            DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<>(schema);
+            try (DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<>(datumWriter)) {
+                dataFileWriter.create(schema, out);
+                for (GenericRecord datum : datums) {
+                    dataFileWriter.append(datum);
+                }
+                logger.debug("End writing line to AVRO file");
+            } catch (IOException e) {
+                logger.error("Some problem with writing line to AVRO file", e);
+                throw e;
             }
-            logger.info("Ends writing the AVRO file");
-        } catch (IOException e) {
-            logger.error("Some problem with writing AVRO file", e);
-            throw e;
-        } finally {
-            output.close();
         }
     }
 }

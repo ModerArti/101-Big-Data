@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 
 /**
  * App for parsing data from CSV to AVRO
@@ -26,26 +25,21 @@ public class App {
     private static final String PATH_TO_CSV = Config.loadProperty("hdfs.file.csv");
     private static final String PATH_TO_AVRO = Config.loadProperty("hdfs.file.avro");
 
-    public static void main(String[] args) throws IOException, CsvException {
-        InputStream fromHDFStoCSV = HDFSConnector.readFile(PATH_TO_CSV);
+    public static void main(String[] args) {
+        try (InputStream fromHDFStoCSV = HDFSConnector.readFile(PATH_TO_CSV);
+             OutputStream fromAVROtoHDFS = HDFSConnector.writeFile(PATH_TO_AVRO)) {
+            CSVParser.setInputStream(fromHDFStoCSV);
+            AVROParser.setOutputStream(fromAVROtoHDFS);
 
-        List<String[]> strings = readAllFromCSV(fromHDFStoCSV);
-
-        if (!strings.isEmpty()) {
-            OutputStream fromAVROtoHDFS = HDFSConnector.writeFile(PATH_TO_AVRO);
-
-            writeAllToAVRO(fromAVROtoHDFS, strings);
-        } else {
-            logger.warn("CSV file is empty");
+            logger.info("Start parsing the data");
+            String[] strings;
+            while ((strings = CSVParser.readLine()) != null) {
+                AVROParser.writeLine(strings);
+            }
+            logger.info("End parsing the data");
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
         }
-    }
-
-    private static List<String[]> readAllFromCSV(InputStream in) throws IOException, CsvException {
-        return CSVParser.readAll(in);
-    }
-
-    private static void writeAllToAVRO(OutputStream out, List<String[]> strings) throws IOException {
-        AVROParser.writeAll(out, strings);
     }
 
 }
