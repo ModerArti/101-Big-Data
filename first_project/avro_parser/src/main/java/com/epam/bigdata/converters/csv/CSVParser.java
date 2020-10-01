@@ -29,7 +29,7 @@ public class CSVParser {
           logger.info("Starts reading the CSV file");
           try (CSVReader csvReader = new CSVReader(new InputStreamReader(reader))) {
                List<String[]> strings =  csvReader.readAll();
-               logger.info("Gets the end of the file");
+               logger.info("Ends reading the CSV file");
                return strings;
           } catch (IOException | CsvException e) {
                logger.error("Can't read the CSV file", e);

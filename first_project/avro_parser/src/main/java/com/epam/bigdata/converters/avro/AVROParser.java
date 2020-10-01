@@ -28,7 +28,7 @@ public class AVROParser {
     private static Schema generateSchema(List<String[]> strings) {
         String[] headers = strings.remove(0);
         SchemaBuilder.FieldAssembler<Schema> fieldBuilder = SchemaBuilder.record("data")
-                .namespace("com.epam.big_data")
+                .namespace("com.epam.bigdata")
                 .fields();
         for (String header : headers) {
             fieldBuilder.requiredString(header);
@@ -50,10 +50,10 @@ public class AVROParser {
 
     /**
      * Method that gets list of strings arrays with data and output stream where data will be writing
-     * @param strings List of strings arrays with data
      * @param output Output stream for writing the data
+     * @param strings List of strings arrays with data
      */
-    public static void writeAll(List<String[]> strings, OutputStream output) throws IOException {
+    public static void writeAll(OutputStream output, List<String[]> strings) throws IOException {
         logger.debug("Starts creating the schema");
         Schema schema = generateSchema(strings);
         logger.debug("Ends creating the schema");
@@ -73,6 +73,8 @@ public class AVROParser {
         } catch (IOException e) {
             logger.error("Some problem with writing AVRO file", e);
             throw e;
+        } finally {
+            output.close();
         }
     }
 }
