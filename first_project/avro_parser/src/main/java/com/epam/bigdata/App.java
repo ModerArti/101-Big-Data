@@ -1,5 +1,6 @@
 package com.epam.bigdata;
 
+import com.epam.bigdata.config.Config;
 import com.epam.bigdata.converters.avro.AVROParser;
 import com.epam.bigdata.converters.csv.CSVParser;
 import com.epam.bigdata.hdfs.HDFSConnector;
@@ -8,9 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.util.List;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * App for parsing data from CSV to AVRO
@@ -20,23 +20,26 @@ import java.util.List;
  */
 public class App {
 
-    public static void main(String[] args) throws IOException, CsvException {
-        PipedOutputStream outFromHDFStoCSV = HDFSConnector.readFile();
-        List<String[]> strings = readAllFromCSV(outFromHDFStoCSV);
-        PipedOutputStream outFromAVROToHDFS = writeAllToAVRO(strings);
-        HDFSConnector.writeFile(new PipedInputStream(outFromAVROToHDFS));
-    }
+    private static final Logger logger = LogManager.getLogger();
 
-    private static List<String[]> readAllFromCSV(PipedOutputStream out) throws IOException, CsvException {
-        try (PipedInputStream in = new PipedInputStream(out)) {
-            return CSVParser.readAll(in);
+    private static final String PATH_TO_CSV = Config.loadProperty("hdfs.file.csv");
+    private static final String PATH_TO_AVRO = Config.loadProperty("hdfs.file.avro");
+
+    public static void main(String[] args) {
+        try (InputStream fromHDFStoCSV = HDFSConnector.readFile(PATH_TO_CSV);
+             OutputStream fromAVROtoHDFS = HDFSConnector.writeFile(PATH_TO_AVRO)) {
+            CSVParser.setInputStream(fromHDFStoCSV);
+            AVROParser.setOutputStream(fromAVROtoHDFS);
+
+            logger.info("Start parsing the data");
+            String[] strings;
+            while ((strings = CSVParser.readLine()) != null) {
+                AVROParser.writeLine(strings);
+            }
+            logger.info("End parsing the data");
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
         }
-    }
-
-    private static PipedOutputStream writeAllToAVRO(List<String[]> strings) throws IOException {
-        PipedOutputStream output = new PipedOutputStream();
-        AVROParser.writeAll(strings, output);
-        return output;
     }
 
 }

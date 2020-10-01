@@ -10,7 +10,7 @@ import java.io.File;
 
 public class Config {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
     private static Configuration config;
 
     static {
@@ -18,7 +18,7 @@ public class Config {
         try {
             config = configs.properties(new File("avro_parser.properties"));
         } catch (ConfigurationException cex) {
-            LOGGER.error("Can't load the properties", cex);
+            logger.error("Can't load the properties", cex);
             throw new RuntimeException(cex);
         }
     }
