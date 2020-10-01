@@ -1,8 +1,10 @@
 package com.epam.bigdata.converters.csv;
 
+import com.opencsv.exceptions.CsvException;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,24 +14,30 @@ import static org.junit.Assert.assertArrayEquals;
 public class CSVParserTest {
 
     @Test
-    public void readAllOnEmptyString() throws IOException {
+    public void readAllOnEmptyString() throws IOException, CsvException {
         String csvString = "";
         InputStream in = new BufferedInputStream(new ByteArrayInputStream(csvString.getBytes()));
-        List<String[]> result = CSVParser.readAll(in);
-        List<String[]> expected = new LinkedList<>();
-        assertArrayEquals(expected.toArray(), result.toArray());
+        CSVParser.setInputStream(in);
+        String[] result = CSVParser.readLine();
+        String[] expected = null;
+        assertArrayEquals(expected, result);
         in.close();
     }
 
     @Test
-    public void readAllOnCorrectCSVString() throws IOException {
+    public void readAllOnCorrectCSVString() throws IOException, CsvException {
         String csvString = "colA, ColB\n" +
                 "A, B\n" +
                 "C, D\n" +
                 "G, G\n" +
                 "G, F";
         InputStream in = new BufferedInputStream(new ByteArrayInputStream(csvString.getBytes()));
-        List<String[]> result = CSVParser.readAll(in);
+        CSVParser.setInputStream(in);
+        List<String[]> result = new ArrayList<>();
+        String[] strings;
+        while ((strings = CSVParser.readLine()) != null) {
+            result.add(strings);
+        }
         List<String[]> expected = Arrays.asList(new String[][]{
                 {"colA", " ColB"},
                 {"A", " B"},

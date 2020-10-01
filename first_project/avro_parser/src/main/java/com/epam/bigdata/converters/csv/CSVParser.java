@@ -18,23 +18,33 @@ import java.util.List;
  */
 public class CSVParser {
 
-     private final static Logger LOGGER = LogManager.getLogger();
+    private final static Logger logger = LogManager.getLogger();
 
-     /**
-      * Method that gets the <code>reader</code> and read CSV data from it to list of strings arrays
-      * @param reader Source of CSV data
-      * @return List of strings arrays with parsed data
-      */
-     public static List<String[]> readAll(InputStream reader) throws IOException, CsvException {
-          LOGGER.info("Starts reading the CSV file");
-          try (CSVReader csvReader = new CSVReader(new InputStreamReader(reader))) {
-               List<String[]> strings =  csvReader.readAll();
-               LOGGER.info("Gets the end of the file");
-               return strings;
-          } catch (IOException | CsvException e) {
-               LOGGER.error("Can't read the CSV file", e);
-               throw e;
-          }
-     }
+    private static CSVReader csvReader;
+
+    /**
+     * Method for init CSVReader
+     * @param inputStream input stream with data
+     */
+    public static void setInputStream(InputStream inputStream) {
+        csvReader = new CSVReader(new InputStreamReader(inputStream));
+    }
+
+    /**
+     * Method that read one line of CSV data from it to strings arrays
+     *
+     * @return List of strings arrays with parsed data
+     */
+    public static String[] readLine() throws IOException, CsvException {
+        logger.debug("Start reading line from the CSV file");
+        try {
+            String[] strings = csvReader.readNext();
+            logger.debug("End reading line from the CSV file");
+            return strings;
+        } catch (IOException | CsvException e) {
+            logger.error("Can't read the CSV file", e);
+            throw e;
+        }
+    }
 
 }
