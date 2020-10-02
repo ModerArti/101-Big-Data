@@ -23,13 +23,13 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-/first_project/.idea/
+/hdfs_project/.idea/
 /.idea/
-/first_project/files/csv/*
-/first_project/files/avro/*
-/first_project/configs/*
+/hdfs_project/files/csv/*
+/hdfs_project/files/avro/*
+/hdfs_project/configs/*
 !*.gitkeep
-/first_project/avro_parser.iml
-/first_project/target/
-/first_project/avro_parser/avro_parser.iml
-/first_project/avro_parser/target/
+/hdfs_project/avro_parser.iml
+/hdfs_project/target/
+/hdfs_project/avro_parser/avro_parser.iml
+/hdfs_project/avro_parser/target/
