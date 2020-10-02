@@ -14,7 +14,7 @@ import static org.junit.Assert.assertArrayEquals;
 public class CSVParserTest {
 
     @Test
-    public void readAllOnEmptyString() throws IOException, CsvException {
+    public void must_return_null_when_input_is_empty() throws IOException, CsvException {
         String csvString = "";
         InputStream in = new BufferedInputStream(new ByteArrayInputStream(csvString.getBytes()));
         CSVParser csvParser = new CSVParser(in);
@@ -25,7 +25,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void readAllOnCorrectCSVString() throws IOException, CsvException {
+    public void must_return_correct_CSV_string_on_correct_input_data() throws IOException, CsvException {
         String csvString = "colA, ColB\n" +
                 "A, B\n" +
                 "C, D\n" +
