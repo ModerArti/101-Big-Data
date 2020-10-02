@@ -19,6 +19,7 @@
 *.tar.gz
 *.log.gz
 *.rar
+*.iml
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
@@ -29,7 +30,5 @@ hs_err_pid*
 /hdfs_project/files/avro/*
 /hdfs_project/configs/*
 !*.gitkeep
-/hdfs_project/avro_parser.iml
 /hdfs_project/target/
-/hdfs_project/avro_parser/avro_parser.iml
 /hdfs_project/avro_parser/target/
