@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
 
 /**
  * Class for parsing CSV files
@@ -18,16 +17,16 @@ import java.util.List;
  */
 public class CSVParser {
 
-    private final static Logger logger = LogManager.getLogger();
+    private final Logger logger = LogManager.getLogger();
 
-    private static CSVReader csvReader;
+    private CSVReader csvReader;
 
     /**
      * Method for init CSVReader
      * @param inputStream input stream with data
      */
-    public static void setInputStream(InputStream inputStream) {
-        csvReader = new CSVReader(new InputStreamReader(inputStream));
+    public CSVParser(InputStream inputStream) {
+        this.csvReader = new CSVReader(new InputStreamReader(inputStream));
     }
 
     /**
@@ -35,7 +34,7 @@ public class CSVParser {
      *
      * @return List of strings arrays with parsed data
      */
-    public static String[] readLine() throws IOException, CsvException {
+    public String[] readLine() throws IOException, CsvException {
         logger.debug("Start reading line from the CSV file");
         try {
             String[] strings = csvReader.readNext();

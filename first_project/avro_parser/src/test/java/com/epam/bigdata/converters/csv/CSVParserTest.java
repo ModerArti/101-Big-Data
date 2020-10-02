@@ -17,8 +17,8 @@ public class CSVParserTest {
     public void readAllOnEmptyString() throws IOException, CsvException {
         String csvString = "";
         InputStream in = new BufferedInputStream(new ByteArrayInputStream(csvString.getBytes()));
-        CSVParser.setInputStream(in);
-        String[] result = CSVParser.readLine();
+        CSVParser csvParser = new CSVParser(in);
+        String[] result = csvParser.readLine();
         String[] expected = null;
         assertArrayEquals(expected, result);
         in.close();
@@ -32,10 +32,10 @@ public class CSVParserTest {
                 "G, G\n" +
                 "G, F";
         InputStream in = new BufferedInputStream(new ByteArrayInputStream(csvString.getBytes()));
-        CSVParser.setInputStream(in);
+        CSVParser csvParser = new CSVParser(in);
         List<String[]> result = new ArrayList<>();
         String[] strings;
-        while ((strings = CSVParser.readLine()) != null) {
+        while ((strings = csvParser.readLine()) != null) {
             result.add(strings);
         }
         List<String[]> expected = Arrays.asList(new String[][]{
