@@ -14,28 +14,28 @@ import static org.junit.Assert.assertArrayEquals;
 public class CSVParserTest {
 
     @Test
-    public void readAllOnEmptyString() throws IOException, CsvException {
+    public void must_return_null_when_input_is_empty() throws IOException, CsvException {
         String csvString = "";
         InputStream in = new BufferedInputStream(new ByteArrayInputStream(csvString.getBytes()));
-        CSVParser.setInputStream(in);
-        String[] result = CSVParser.readLine();
+        CSVParser csvParser = new CSVParser(in);
+        String[] result = csvParser.readLine();
         String[] expected = null;
         assertArrayEquals(expected, result);
         in.close();
     }
 
     @Test
-    public void readAllOnCorrectCSVString() throws IOException, CsvException {
+    public void must_return_correct_CSV_string_on_correct_input_data() throws IOException, CsvException {
         String csvString = "colA, ColB\n" +
                 "A, B\n" +
                 "C, D\n" +
                 "G, G\n" +
                 "G, F";
         InputStream in = new BufferedInputStream(new ByteArrayInputStream(csvString.getBytes()));
-        CSVParser.setInputStream(in);
+        CSVParser csvParser = new CSVParser(in);
         List<String[]> result = new ArrayList<>();
         String[] strings;
-        while ((strings = CSVParser.readLine()) != null) {
+        while ((strings = csvParser.readLine()) != null) {
             result.add(strings);
         }
         List<String[]> expected = Arrays.asList(new String[][]{

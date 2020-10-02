@@ -23,12 +23,20 @@ import java.util.List;
  */
 public class AVROParser {
 
-    private static final Logger logger = LogManager.getLogger();
+    private final Logger logger = LogManager.getLogger();
 
-    private static Schema schema;
-    private static OutputStream out;
+    private Schema schema;
+    private OutputStream out;
 
-    private static Schema generateSchema(String[] headers) {
+    /**
+     * Init OutputStream in AVROParser
+     * @param outputStream output stream for writing the data
+     */
+    public AVROParser(OutputStream outputStream) {
+        this.out = outputStream;
+    }
+
+    private Schema generateSchema(String[] headers) {
         SchemaBuilder.FieldAssembler<Schema> fieldBuilder = SchemaBuilder.record("data")
                 .namespace("com.epam.bigdata")
                 .fields();
@@ -38,7 +46,7 @@ public class AVROParser {
         return fieldBuilder.endRecord();
     }
 
-    private static List<GenericRecord> getDatums(String[] values, Schema schema) {
+    private List<GenericRecord> getDatums(String[] values, Schema schema) {
         List<GenericRecord> datums = new LinkedList<>();
         GenericRecord datum = new GenericData.Record(schema);
         for (int i = 0; i < values.length; ++i) {
@@ -49,19 +57,11 @@ public class AVROParser {
     }
 
     /**
-     * Method for init OutputStream in AVROParser
-     * @param outputStream output stream for writing the data
-     */
-    public static void setOutputStream(OutputStream outputStream) {
-        out = outputStream;
-    }
-
-    /**
      * Method that gets list of strings arrays with data and writing it
      *
      * @param strings List of strings arrays with data
      */
-    public static void writeLine(String[] strings) throws IOException {
+    public void writeLine(String[] strings) throws IOException {
         if (schema == null) {
             logger.debug("Start creating the schema");
             schema = generateSchema(strings);

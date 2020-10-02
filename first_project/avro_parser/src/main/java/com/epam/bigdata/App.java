@@ -28,13 +28,13 @@ public class App {
     public static void main(String[] args) {
         try (InputStream fromHDFStoCSV = HDFSConnector.readFile(PATH_TO_CSV);
              OutputStream fromAVROtoHDFS = HDFSConnector.writeFile(PATH_TO_AVRO)) {
-            CSVParser.setInputStream(fromHDFStoCSV);
-            AVROParser.setOutputStream(fromAVROtoHDFS);
+            CSVParser csvParser = new CSVParser(fromHDFStoCSV);
+            AVROParser avroParser = new AVROParser(fromAVROtoHDFS);
 
             logger.info("Start parsing the data");
             String[] strings;
-            while ((strings = CSVParser.readLine()) != null) {
-                AVROParser.writeLine(strings);
+            while ((strings = csvParser.readLine()) != null) {
+                avroParser.writeLine(strings);
             }
             logger.info("End parsing the data");
         } catch (IOException | CsvException e) {
