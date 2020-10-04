@@ -24,15 +24,17 @@ public class App {
 
         Map<CompositeKey, Long> compositeKeyToNumber = rddHandler.getData("test.csv");
 
-        Map<CompositeKey, Long> compositeKeySortedByNumber = compositeKeyToNumber
+        compositeKeyToNumber
                 .entrySet().stream()
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .limit(3)
                 .collect(Collectors.toMap(
                         Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new
-                ));
-
-        System.out.println(compositeKeySortedByNumber);
+                ))
+                .forEach((key, value) -> {
+                    System.out.println(key);
+                    System.out.println("Number of references: " + value);
+                });
 
         sc.stop();
     }
