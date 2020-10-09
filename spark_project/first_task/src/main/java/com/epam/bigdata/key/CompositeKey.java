@@ -22,14 +22,15 @@ public class CompositeKey implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CompositeKey that = (CompositeKey) o;
-        return Objects.equals(continent, that.continent) &&
+        return Objects.equals(id, that.id) &&
+                Objects.equals(continent, that.continent) &&
                 Objects.equals(country, that.country) &&
                 Objects.equals(market, that.market);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(continent, country, market);
+        return Objects.hash(id, continent, country, market);
     }
 
     @Override
