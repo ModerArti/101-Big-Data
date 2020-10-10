@@ -22,7 +22,8 @@ public class RDDHandler {
         JavaRDD<String> text = sc.textFile(pathToFile);
 
         JavaRDD<String[]> wordsByLine = text.map(line -> line.split(","));
-        List<String> headers = Arrays.asList(wordsByLine.take(1).get(0));
+        wordsByLine = wordsByLine.cache();
+        List<String> headers = Arrays.asList(wordsByLine.first());
         wordsByLine = wordsByLine.filter(line -> !Arrays.equals(line, headers.toArray()));
 
         int id = headers.indexOf("id");
