@@ -1,6 +1,6 @@
 package com.epam.bigdata;
 
-import com.epam.bigdata.key.CompositeKey;
+import com.epam.bigdata.key.Hotel;
 import com.epam.bigdata.sparkhandler.RDDHandler;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -22,9 +22,9 @@ public class App {
 
         RDDHandler rddHandler = new RDDHandler(sc);
 
-        Map<CompositeKey, Long> compositeKeyToNumber = rddHandler.getData("test.csv");
+        Map<Hotel, Long> hotelToNumberOfReferences = rddHandler.getData("test.csv");
 
-        compositeKeyToNumber
+        hotelToNumberOfReferences
                 .entrySet().stream()
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .limit(3)
