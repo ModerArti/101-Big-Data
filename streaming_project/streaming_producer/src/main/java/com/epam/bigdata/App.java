@@ -39,7 +39,7 @@ public class App {
             while (true) {
                 Hotel hotel = generateHotels();
                 ProducerRecord<String, Hotel> data = new ProducerRecord<>(
-                        "homework", hotel);
+                        "streaming", hotel);
                 producer.send(data);
                 producer.flush();
                 Thread.sleep(TimeUnit.SECONDS.toMillis(5));
