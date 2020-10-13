@@ -1,6 +1,6 @@
 package com.epam.bigdata.sparkhandler;
 
-import com.epam.bigdata.key.CompositeKey;
+import com.epam.bigdata.key.Hotel;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -18,7 +18,7 @@ public class RDDHandler {
         this.sc = sc;
     }
 
-    public Map<CompositeKey, Long> getData(String pathToFile) {
+    public Map<Hotel, Long> getData(String pathToFile) {
         JavaRDD<String> text = sc.textFile(pathToFile);
 
         JavaRDD<String[]> wordsByLine = text.map(line -> line.split(","));
@@ -31,12 +31,12 @@ public class RDDHandler {
         int countryIndex = headers.indexOf("hotel_country");
         int marketIndex = headers.indexOf("hotel_market");
 
-        JavaPairRDD<CompositeKey, String[]> compositeKeyToLine = wordsByLine.mapToPair(line ->
-                new Tuple2<>(new CompositeKey(
+        JavaPairRDD<Hotel, String[]> hotelToLine = wordsByLine.mapToPair(line ->
+                new Tuple2<>(new Hotel(
                         line[id], line[continentIndex], line[countryIndex], line[marketIndex]
                 ), line));
 
-        return compositeKeyToLine.countByKey();
+        return hotelToLine.countByKey();
     }
 
 }
