@@ -40,4 +40,35 @@ public class Hotel implements Serializable {
                 .toString();
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getContinent() {
+        return continent;
+    }
+
+    public void setContinent(String continent) {
+        this.continent = continent;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getMarket() {
+        return market;
+    }
+
+    public void setMarket(String market) {
+        this.market = market;
+    }
 }
