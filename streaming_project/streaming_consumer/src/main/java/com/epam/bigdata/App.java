@@ -2,13 +2,18 @@ package com.epam.bigdata;
 
 import com.epam.bigdata.model.Hotel;
 import com.epam.bigdata.serializer.JavaDeserializer;
+import com.epam.bigdata.sparkhandler.RDDHandler;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaSparkContext;
 
 import java.time.Duration;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 public class App {
@@ -23,15 +28,28 @@ public class App {
         return consumerConfig;
     }
 
+    private static JavaSparkContext getSparkContext() {
+        SparkConf conf = new SparkConf().setAppName("Producer").setMaster("local[*]");
+        return new JavaSparkContext(conf);
+    }
+
     public static void main(String[] args) {
+        JavaSparkContext sc = getSparkContext();
+
+        RDDHandler rddHandler = new RDDHandler(sc, "data");
 
         KafkaConsumer<byte[], Hotel> consumer = new KafkaConsumer<>(getKafkaProps());
-        consumer.subscribe(Collections.singletonList("homework"));
+        consumer.subscribe(Collections.singletonList("streaming"));
 
         while (true) {
+            List<Hotel> hotels = new LinkedList<>();
             ConsumerRecords<byte[], Hotel> records = consumer.poll(Duration.ofMillis(1000));
             for (ConsumerRecord<byte[], Hotel> record : records) {
-                System.out.printf("Received Message topic =%s, partition =%s, offset = %d, key = %s, value = %s\n", record.topic(), record.partition(), record.offset(), record.key(), record.value());
+                hotels.add(record.value());
+            }
+
+            if (hotels.size() != 0) {
+                rddHandler.writeData(hotels);
             }
 
             consumer.commitSync();
