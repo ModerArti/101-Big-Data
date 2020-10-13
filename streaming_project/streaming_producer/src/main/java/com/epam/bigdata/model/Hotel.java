@@ -22,14 +22,12 @@ public class Hotel implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Hotel that = (Hotel) o;
-        return Objects.equals(continent, that.continent) &&
-                Objects.equals(country, that.country) &&
-                Objects.equals(market, that.market);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(continent, country, market);
+        return Objects.hash(id);
     }
 
     @Override
