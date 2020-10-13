@@ -22,9 +22,9 @@ public class App {
 
         RDDHandler rddHandler = new RDDHandler(sc);
 
-        Map<Hotel, Long> compositeKeyToNumber = rddHandler.getData("test.csv");
+        Map<Hotel, Long> hotelToNumberOfReferences = rddHandler.getData("test.csv");
 
-        compositeKeyToNumber
+        hotelToNumberOfReferences
                 .entrySet().stream()
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .limit(3)

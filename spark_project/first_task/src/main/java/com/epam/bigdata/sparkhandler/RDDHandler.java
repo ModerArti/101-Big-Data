@@ -31,12 +31,12 @@ public class RDDHandler {
         int countryIndex = headers.indexOf("hotel_country");
         int marketIndex = headers.indexOf("hotel_market");
 
-        JavaPairRDD<Hotel, String[]> compositeKeyToLine = wordsByLine.mapToPair(line ->
+        JavaPairRDD<Hotel, String[]> hotelToLine = wordsByLine.mapToPair(line ->
                 new Tuple2<>(new Hotel(
                         line[id], line[continentIndex], line[countryIndex], line[marketIndex]
                 ), line));
 
-        return compositeKeyToLine.countByKey();
+        return hotelToLine.countByKey();
     }
 
 }
