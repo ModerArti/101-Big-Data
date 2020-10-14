@@ -11,12 +11,10 @@ public class JavaSerializer implements Serializer<Hotel> {
 
     @Override
     public byte[] serialize(String s, Hotel o) {
-        try {
-            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-            ObjectOutputStream objectStream = new ObjectOutputStream(byteStream);
+        try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectStream = new ObjectOutputStream(byteStream)) {
             objectStream.writeObject(o);
             objectStream.flush();
-            objectStream.close();
             return byteStream.toByteArray();
         }
         catch (IOException e) {
