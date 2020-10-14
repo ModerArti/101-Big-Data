@@ -11,16 +11,13 @@ import java.util.List;
 
 public class RDDHandler {
 
-    private JavaSparkContext sc;
     private final String PATH_TO_FILE;
 
-    public RDDHandler(JavaSparkContext sc, String pathToFile) {
-        this.sc = sc;
+    public RDDHandler(String pathToFile) {
         this.PATH_TO_FILE = pathToFile;
     }
 
     public void writeData(List<Hotel> hotels) {
-        //JavaRDD<Hotel> hotelsInRDD = sc.parallelize(hotels);
         SparkSession session = SparkSession.builder()
                 .master("local[*]")
                 .appName("streaming_consumer")

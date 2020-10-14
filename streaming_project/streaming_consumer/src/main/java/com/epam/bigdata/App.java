@@ -28,15 +28,8 @@ public class App {
         return consumerConfig;
     }
 
-    private static JavaSparkContext getSparkContext() {
-        SparkConf conf = new SparkConf().setAppName("Producer").setMaster("local[*]");
-        return new JavaSparkContext(conf);
-    }
-
     public static void main(String[] args) {
-        JavaSparkContext sc = getSparkContext();
-
-        RDDHandler rddHandler = new RDDHandler(sc, "data");
+        RDDHandler rddHandler = new RDDHandler("data");
 
         KafkaConsumer<byte[], Hotel> consumer = new KafkaConsumer<>(getKafkaProps());
         consumer.subscribe(Collections.singletonList("streaming"));
