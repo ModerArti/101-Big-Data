@@ -40,6 +40,21 @@
       <version>2.10.0</version>
     </dependency>
 
+    <!-- Spark streaming -->
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-streaming_2.12</artifactId>
+      <version>3.0.1</version>
+    </dependency>
+
+    <!-- Spark streaming for Kafka -->
+    <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-streaming-kafka-0-10 -->
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-streaming-kafka-0-10_2.12</artifactId>
+      <version>3.0.1</version>
+    </dependency>
+
     <!-- Spark core -->
     <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-core -->
     <dependency>
