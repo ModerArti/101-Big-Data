@@ -2,24 +2,24 @@ package com.epam.bigdata;
 
 import com.epam.bigdata.model.Hotel;
 import com.epam.bigdata.serializer.JavaDeserializer;
-import com.epam.bigdata.sparkhandler.RDDHandler;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.streaming.Durations;
+import org.apache.spark.streaming.api.java.JavaDStream;
+import org.apache.spark.streaming.api.java.JavaStreamingContext;
+import org.apache.spark.streaming.kafka010.ConsumerStrategies;
+import org.apache.spark.streaming.kafka010.KafkaUtils;
+import org.apache.spark.streaming.kafka010.LocationStrategies;
 
-import java.time.Duration;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class App {
 
-    private static Properties getKafkaProps() {
-        Properties consumerConfig = new Properties();
+    private static Map<String, Object> getKafkaProps() {
+        Map<String, Object> consumerConfig = new HashMap();
         consumerConfig.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         consumerConfig.put(ConsumerConfig.GROUP_ID_CONFIG, "my-group");
         consumerConfig.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
@@ -28,25 +28,21 @@ public class App {
         return consumerConfig;
     }
 
-    public static void main(String[] args) {
-        RDDHandler rddHandler = new RDDHandler("data");
+    public static void main(String[] args) throws InterruptedException {
+        SparkConf conf = new SparkConf().setMaster("local[*]").setAppName("elastic_consumer");
+        JavaStreamingContext streamingContext = new JavaStreamingContext(conf, Durations.seconds(5));
 
-        KafkaConsumer<byte[], Hotel> consumer = new KafkaConsumer<>(getKafkaProps());
-        consumer.subscribe(Collections.singletonList("streaming"));
+        JavaDStream<Hotel> stream =
+                KafkaUtils.<byte[], Hotel>createDirectStream(
+                        streamingContext,
+                        LocationStrategies.PreferBrokers(),
+                        ConsumerStrategies.Subscribe(Arrays.asList("streaming"), getKafkaProps())
+                ).map(ConsumerRecord::value);
 
-        while (true) {
-            List<Hotel> hotels = new LinkedList<>();
-            ConsumerRecords<byte[], Hotel> records = consumer.poll(Duration.ofMillis(1000));
-            for (ConsumerRecord<byte[], Hotel> record : records) {
-                hotels.add(record.value());
-            }
+        stream.print();
 
-            if (hotels.size() != 0) {
-                rddHandler.writeData(hotels);
-            }
-
-            consumer.commitSync();
-        }
+        streamingContext.start();
+        streamingContext.awaitTermination();
 
     }
 
