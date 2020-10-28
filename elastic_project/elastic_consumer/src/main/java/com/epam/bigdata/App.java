@@ -11,6 +11,7 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
+import org.elasticsearch.spark.streaming.api.java.JavaEsSparkStreaming;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,7 +30,10 @@ public class App {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        SparkConf conf = new SparkConf().setMaster("local[*]").setAppName("elastic_consumer");
+        SparkConf conf = new SparkConf()
+                .setMaster("local[*]")
+                .setAppName("elastic_consumer")
+                .set("es.index.auto.create", "true");
         JavaStreamingContext streamingContext = new JavaStreamingContext(conf, Durations.seconds(5));
 
         JavaDStream<Hotel> stream =
@@ -40,6 +44,8 @@ public class App {
                 ).map(ConsumerRecord::value);
 
         stream.print();
+        JavaEsSparkStreaming.saveToEs(stream, "spark/streaming");
+
 
         streamingContext.start();
         streamingContext.awaitTermination();
